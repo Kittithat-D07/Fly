@@ -1,0 +1,12 @@
+app = "fly-ov4qbg"
+
+[build]
+
+[env]
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8899
+
+  [[services.ports]]
+    port = 8899
