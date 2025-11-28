@@ -1,5 +1,6 @@
 const net = require("net");
 
+// ใช้ PORT จากระบบ หรือ fallback = 7805
 const PORT = process.env.PORT || 7805;
 
 const server = net.createServer((socket) => {
@@ -11,6 +12,10 @@ const server = net.createServer((socket) => {
 
   socket.on("end", () => {
     console.log("Client disconnected");
+  });
+
+  socket.on("error", (err) => {
+    console.error("Socket error:", err);
   });
 });
 
