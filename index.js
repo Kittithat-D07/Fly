@@ -1,13 +1,15 @@
 const net = require("net");
 
-// ใช้ PORT จากระบบ หรือ fallback = 7805
+// ใช้ PORT จาก env ถ้ามี (fly จะส่งมา) ถ้าไม่มีก็ใช้ 7805
 const PORT = process.env.PORT || 7805;
 
 const server = net.createServer((socket) => {
   console.log("Client connected:", socket.remoteAddress);
 
   socket.on("data", (data) => {
-    console.log("DATA:", data.toString());
+    const msg = data.toString();
+    console.log("DATA:", msg);
+    // TODO: ตรงนี้ค่อยเพิ่มส่งต่อไป Telegram / LINE ทีหลังได้
   });
 
   socket.on("end", () => {
