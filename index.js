@@ -1,26 +1,19 @@
-const net = require("net");
+export default async function handler(req, res) {
+  try {
+    console.log("🔥 NEW DATA:", req.query);
 
-// ใช้ PORT จาก env ถ้ามี (fly จะส่งมา) ถ้าไม่มีก็ใช้ 7805
-const PORT = process.env.PORT || 7805;
+    // ดึงข้อมูลที่ WiFi-UART ส่งมา
+    const data = JSON.stringify(req.query);
 
-const server = net.createServer((socket) => {
-  console.log("Client connected:", socket.remoteAddress);
+    // ส่งไป Telegram (ตัวอย่าง)
+    const botToken = "8581800406:AAFCziKbQpDZX15fuZvF_F_0X0XdMpUqLO0";
+    const chatId = "8477285785";
 
-  socket.on("data", (data) => {
-    const msg = data.toString();
-    console.log("DATA:", msg);
-    // TODO: ตรงนี้ค่อยเพิ่มส่งต่อไป Telegram / LINE ทีหลังได้
-  });
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(data)}`);
 
-  socket.on("end", () => {
-    console.log("Client disconnected");
-  });
-
-  socket.on("error", (err) => {
-    console.error("Socket error:", err);
-  });
-});
-
-server.listen(PORT, () => {
-  console.log(`TCP server listening on port ${PORT}`);
-});
+    res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.toString() });
+  }
+}
